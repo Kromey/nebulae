@@ -2,7 +2,7 @@ use std::time::Instant;
 
 
 
-use nebula::Nebula;
+use sky::Nebula;
 
 const IMG_DIMENSIONS: usize = 1024;
 
