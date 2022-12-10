@@ -28,7 +28,7 @@ impl Nebula {
         }
     }
 
-    pub fn generate(self) -> Vec<u16> {
+    pub fn generate(self, background: &[Color]) -> Vec<u16> {
         let mut rng = Xoshiro256PlusPlus::seed_from_u64(self.seed);
 
         let clouds = vec![
@@ -36,16 +36,14 @@ impl Nebula {
             GasCloud::new(Color::new(0.2, 1.0, 1.0, 0.8), rng.gen()),
         ];
 
-        let bg_color = Color::new(0.02, 0.02, 0.095, 1.0);
-
-        (0..(self.size.pow(2)))
-            .into_par_iter()
-            .map(|i| {
+        background.into_par_iter()
+            .enumerate()
+            .map(|(i, bg_color)| {
                 let (x, y) = self.get_xy(i);
                 // print!("\n{x},{y}: ");
                 clouds.iter()
                     .map(|gas| gas.pixel(x, y))
-                    .fold(bg_color, |bg, fg| bg.blend(fg))
+                    .fold(*bg_color, |bg, fg| bg.blend(fg))
                     .to_array()
             })
             .flatten()
