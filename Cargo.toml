@@ -11,4 +11,3 @@ bracket-noise = "0.8"
 rand = "0.8"
 rand_xoshiro = "0.6"
 rayon = "1.6"
-fast_poisson = { version = "0.5", features = ["single_precision"] }

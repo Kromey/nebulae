@@ -2,7 +2,6 @@ use crate::color::Color;
 use bracket_noise::prelude::*;
 use rand::prelude::*;
 use rand_xoshiro::Xoshiro256PlusPlus;
-use fast_poisson::Poisson2D;
 
 const DEFAULT_SEED: u64 = 0xCAFEBABE;
 
@@ -41,27 +40,23 @@ impl Stars {
 
             let scale = self.size as f32;
 
-            for point in Poisson2D::new()
-                .with_seed(rng.gen())
-                .with_dimensions([(self.size - 1) as f32; 2], 20.0)
-                .with_samples(5)
-                .iter()
+            for _ in 0..500
             {
-                let alpha = noise.get_noise(point[0] / scale, point[1] / scale);
+                let x = rng.gen_range(0..self.size);
+                let y = rng.gen_range(0..self.size);
+                let idx = y * self.size + x;
+
+                let alpha = noise.get_noise(x as f32 / scale, y as f32 / scale) * 1.5;
                 if alpha <= f32::EPSILON {
                     continue; // ignore "invisible" stars
                 }
 
-                let x = point[0].round() as usize;
-                let y = point[1].round() as usize;
-                let idx = y * self.size + x;
-
-                sky[idx] = Color::new(
+                sky[idx] = sky[idx].blend(Color::new(
                     1.0,
                     1.0,
                     1.0,
-                    alpha.clamp(0.0, 1.0) * 0.5,
-                );
+                    alpha.clamp(0.0, 1.0) * 0.6,
+                ));
             }
         }
 
