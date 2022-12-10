@@ -2,7 +2,7 @@ use std::time::Instant;
 
 
 
-use sky::Nebula;
+use sky::{Nebula, Stars};
 
 const IMG_DIMENSIONS: usize = 1024;
 
@@ -38,4 +38,12 @@ fn main() {
         "Wrote image to file in {:.4} seconds",
         save.elapsed().as_secs_f32()
     );
+
+    let stars = Stars::new(IMG_DIMENSIONS, 200);
+    let pixels = stars.generate();
+
+    let img: image::ImageBuffer<image::Rgba<u16>, Vec<u16>> =
+        image::ImageBuffer::from_vec(dimensions, dimensions, pixels).unwrap();
+
+    img.save("stars.png").unwrap();
 }

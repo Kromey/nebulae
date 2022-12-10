@@ -8,6 +8,7 @@ mod cloud;
 use cloud::GasCloud;
 use super::Color;
 
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Nebula {
     size: usize,
     scale: f32,
@@ -35,7 +36,6 @@ impl Nebula {
             GasCloud::new(Color::new(0.2, 1.0, 1.0, 0.8), rng.gen()),
         ];
 
-        //image::Rgba([1409, 1409, 6291, u16::MAX])
         let bg_color = Color::new(0.02, 0.02, 0.095, 1.0);
 
         (0..(self.size.pow(2)))
