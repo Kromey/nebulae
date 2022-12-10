@@ -1,6 +1,7 @@
 use crate::color::Color;
 use rand::prelude::*;
 use rand_xoshiro::Xoshiro256PlusPlus;
+use fast_poisson::Poisson2D;
 
 const DEFAULT_SEED: u64 = 0xCAFEBABE;
 
@@ -25,6 +26,26 @@ impl Stars {
     }
 
     pub fn generate(self) -> Vec<u16> {
+        let mut sky = vec![Color::new(0.02, 0.02, 0.095, 1.0); self.size.pow(2)];
+        let mut rng = Xoshiro256PlusPlus::seed_from_u64(self.seed);
+
+        for point in Poisson2D::new()
+            .with_seed(rng.gen())
+            .with_dimensions([(self.size - 1) as f32; 2], 8.0)
+            .with_samples(5)
+            .iter()
+        {
+            let x = point[0].round() as usize;
+            let y = point[1].round() as usize;
+            let idx = self.get_idx(x, y);
+
+            sky[idx] = Color::new(1.0, 1.0, 1.0, rng.gen::<f32>().powi(2));
+        }
+
+        sky.into_iter().flat_map(|color| color.to_array()).collect()
+    }
+
+    pub fn _generate(self) -> Vec<u16> {
         let mut sky = vec![Color::new(0.02, 0.02, 0.095, 1.0); self.size.pow(2)];
 
         let mut rng = Xoshiro256PlusPlus::seed_from_u64(self.seed);
@@ -58,7 +79,7 @@ impl Stars {
                     
                     if r > f32::EPSILON {
                         let idx = self.get_idx(x + offset_x, y + offset_y);
-                        sky[idx] = sky[idx].blend(Color::new(r, r, r, 1.0));
+                        sky[idx] = sky[idx].blend(Color::new(1.0, 1.0, 1.0, r));
                     }
                 }
             }
