@@ -40,7 +40,7 @@ impl Stars {
 
             let scale = self.size as f32;
 
-            for _ in 0..500
+            for _ in 0..750
             {
                 let x = rng.gen_range(0..self.size);
                 let y = rng.gen_range(0..self.size);
@@ -55,7 +55,7 @@ impl Stars {
                     1.0,
                     1.0,
                     1.0,
-                    alpha.clamp(0.0, 1.0) * 0.6,
+                    alpha.clamp(0.0, 1.0) * 0.5,
                 ));
             }
         }
