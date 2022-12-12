@@ -6,8 +6,6 @@ use rand::prelude::*;
 use rand::distributions::WeightedIndex;
 use rand_xoshiro::Xoshiro256PlusPlus;
 
-const DEFAULT_SEED: u64 = 0xCAFEBABE;
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum SpectralType {
     O,
@@ -99,11 +97,7 @@ pub struct Stars {
 }
 
 impl Stars {
-    pub fn new(size: usize) -> Self {
-        Self::seeded(size, DEFAULT_SEED)
-    }
-
-    pub fn seeded(size: usize, seed: u64) -> Self {
+    pub fn new(size: usize, seed: u64) -> Self {
         Self {
             seed,
             size,

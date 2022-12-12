@@ -2,8 +2,6 @@ use rayon::prelude::*;
 use rand::prelude::*;
 use rand_xoshiro::Xoshiro256PlusPlus;
 
-const DEFAULT_SEED: u64 = 0xCAFEBABE;
-
 mod cloud;
 use cloud::GasCloud;
 use super::Color;
@@ -16,11 +14,7 @@ pub struct Nebula {
 }
 
 impl Nebula {
-    pub fn new(size: usize) -> Self {
-        Self::seeded(size, DEFAULT_SEED)
-    }
-
-    pub fn seeded(size: usize, seed: u64) -> Self {
+    pub fn new(size: usize, seed: u64) -> Self {
         Self {
             size,
             scale: size as f32,
