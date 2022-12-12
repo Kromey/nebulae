@@ -11,7 +11,7 @@ fn main() {
     let dimensions = IMG_DIMENSIONS as u32;
 
     let star_start = Instant::now();
-    let stars = Stars::new(IMG_DIMENSIONS, 200).generate();
+    let stars = Stars::new(IMG_DIMENSIONS).generate();
     println!("Generated stars in {:.4} seconds", star_start.elapsed().as_secs_f32());
 
     let nebula_start = Instant::now();

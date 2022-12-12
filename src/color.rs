@@ -22,6 +22,16 @@ impl Color {
         Self { r, g, b, a}
     }
 
+    pub fn new_from_u8(r: u8, g: u8, b: u8, a: u8) -> Self {
+        const SCALE: f32 = u8::MAX as f32;
+        Self::new(
+            r as f32 / SCALE,
+            g as f32 / SCALE,
+            b as f32 / SCALE,
+            a as f32 / SCALE,
+        )
+    }
+
     #[inline(always)]
     pub fn splat(value: f32) -> Self {
         Self::new(value, value, value, value)
