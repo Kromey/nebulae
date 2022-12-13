@@ -2,6 +2,10 @@ use crate::color::Color;
 use rand::distributions::WeightedIndex;
 use std::ops::Range;
 
+/// The basic spectral classifications of stars
+///
+/// We do not concern ourselves with sub-types nor "extended" spectral types, as
+/// true-to-life realism is not the goal
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SpectralType {
     O,
@@ -14,6 +18,9 @@ pub enum SpectralType {
 }
 
 impl SpectralType {
+    /// Get the relative weight (i.e. percent) for each type of star.
+    ///
+    /// Numbers are taken from <https://commons.wikimedia.org/wiki/File:Stellar_Classification_Chart.png>
     pub fn weight(&self) -> f32 {
         use SpectralType::*;
 
@@ -28,6 +35,12 @@ impl SpectralType {
         }
     }
 
+    /// Get the blackbody color for each type of star.
+    ///
+    /// In reality, each spectral type covers a range of color, but one color
+    /// for each is enough given that they are not the focus of the image anyway.
+    ///
+    /// Colors come from <http://www.vendian.org/mncharity/dir3/starcolor/>
     pub fn color(&self) -> Color {
         use SpectralType::*;
 
@@ -42,6 +55,13 @@ impl SpectralType {
         }
     }
 
+    /// Get the size (in solar radii) of each type of star
+    ///
+    /// This returns a range from which a random radius can be picked.
+    ///
+    /// Data comes from <https://commons.wikimedia.org/wiki/File:Stellar_Classification_Chart.png>,
+    /// except that the minimum and maximum values of the smallest and largest stars (respectively)
+    /// were chosen arbitrarily by myself.
     pub fn radius(&self) -> Range<f32> {
         use SpectralType::*;
 
@@ -56,6 +76,7 @@ impl SpectralType {
         }
     }
 
+    /// Get a [`WeightedIndex`] suitable for choosing a random star type
     pub fn get_distribution() -> WeightedIndex<f32> {
         let weights = [
             SpectralType::O.weight(),
@@ -70,6 +91,7 @@ impl SpectralType {
         WeightedIndex::new(&weights).unwrap()
     }
 
+    /// Chose a star type given an index
     pub fn from_dist(dist: usize) -> Self {
         use SpectralType::*;
 

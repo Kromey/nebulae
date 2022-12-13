@@ -1,6 +1,7 @@
 use super::Color;
 use bracket_noise::prelude::*;
 
+/// A struct representing a cloud of gas in a nebula
 pub struct GasCloud {
     color: Color,
     noise: FastNoise,
@@ -8,6 +9,7 @@ pub struct GasCloud {
 }
 
 impl GasCloud {
+    /// Create a new cloud with the given color and specified seed
     pub fn new(color: Color, seed: u64) -> Self {
         let noise = Self::new_noise(seed, FractalType::FBM);
         let billow = Self::new_noise(seed, FractalType::Billow);
@@ -19,6 +21,7 @@ impl GasCloud {
         }
     }
 
+    /// Get a noise object using the specified fractal kind
     fn new_noise(seed: u64, kind: FractalType) -> FastNoise {
         // I have no idea what these parameters do!
         // They're stolen directly from https://github.com/amethyst/bracket-lib/blob/master/bracket-noise/examples/simplex_fractal.rs
@@ -34,8 +37,9 @@ impl GasCloud {
         noise
     }
 
+    /// Get the [`Color`] at the specified (x, y) pixel
     pub fn pixel(&self, x: f32, y: f32) -> Color {
-        let radius = self.radius(x, y);
+        let radius = 0.5 - 2.0 * ((x - 0.5).powi(2) + (y - 0.5).powi(2));
         if radius < f32::EPSILON {
             return Color::splat(0.0);
         }
@@ -50,25 +54,23 @@ impl GasCloud {
         let billow = self.get_billow(x, y);
         let w = self.get_noise(x + x_distort, y + y_distort) + billow;
 
-        let radius = self.radius(x, y);
         let a = self.get_noise(x - x_distort, y - y_distort) * radius.min(0.4) + billow * radius;
 
         (self.color * w).mul_alpha(a)
     }
 
+    /// Get and normalize noise at the specified point
     #[inline(always)]
     fn get_noise(&self, x: f32, y: f32) -> f32 {
         (self.noise.get_noise(x, y) + 0.5).clamp(0.0, 1.0)
     }
 
+    /// Get and manipulate the "billow" noise at the specified point
+    ///
+    /// This is used to create both "glowy" spots (positive values) and dark spots (negative values)
     #[inline(always)]
     fn get_billow(&self, x: f32, y: f32) -> f32 {
         self.billow.get_noise(x, y).max(0.0) * 2.0
             - self.billow.get_noise(x + 1.7, y).max(0.0) * 3.0
-    }
-
-    #[inline(always)]
-    fn radius(&self, x: f32, y: f32) -> f32 {
-        0.5 - 2.0 * ((x - 0.5).powi(2) + (y - 0.5).powi(2))
     }
 }
