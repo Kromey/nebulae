@@ -1,7 +1,5 @@
 use std::ops::Mul;
 
-
-
 #[inline(always)]
 fn scale_u16(f: f32) -> u16 {
     const SCALE_TO: f32 = u16::MAX as f32;
@@ -19,7 +17,7 @@ pub struct Color {
 
 impl Color {
     pub fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
-        Self { r, g, b, a}
+        Self { r, g, b, a }
     }
 
     pub fn new_from_u8(r: u8, g: u8, b: u8, a: u8) -> Self {
@@ -51,8 +49,13 @@ impl Color {
             scale_u16(self.a),
         ]
     }
-    
+
     pub fn blend(self, fg: Color) -> Self {
+        if self.a < f32::EPSILON {
+            return fg;
+        } else if fg.a < f32::EPSILON {
+            return self;
+        }
 
         let alpha = self.a + fg.a - self.a * fg.a;
 
@@ -73,11 +76,7 @@ impl Color {
 
     #[inline(always)]
     fn premultiply(&self) -> (f32, f32, f32) {
-        (
-            self.r * self.a,
-            self.g * self.a,
-            self.b * self.a,
-        )
+        (self.r * self.a, self.g * self.a, self.b * self.a)
     }
 }
 
@@ -90,6 +89,6 @@ impl Mul<f32> for Color {
             g: self.g * rhs,
             b: self.b * rhs,
             a: self.a,
-        }    
+        }
     }
 }

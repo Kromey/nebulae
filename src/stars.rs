@@ -1,4 +1,3 @@
-
 use crate::color::Color;
 use bracket_noise::prelude::*;
 use rand::prelude::*;
@@ -15,10 +14,7 @@ pub struct Stars {
 
 impl Stars {
     pub fn new(size: usize, seed: u64) -> Self {
-        Self {
-            seed,
-            size,
-        }
+        Self { seed, size }
     }
 
     pub fn generate(self) -> Vec<Color> {
@@ -37,8 +33,7 @@ impl Stars {
 
             let scale = self.size as f32;
 
-            for _ in 0..750
-            {
+            for _ in 0..750 {
                 let x = rng.gen_range(0..self.size);
                 let y = rng.gen_range(0..self.size);
 

@@ -1,10 +1,10 @@
-use rayon::prelude::*;
 use rand::prelude::*;
 use rand_xoshiro::Xoshiro256PlusPlus;
+use rayon::prelude::*;
 
 mod cloud;
-use cloud::GasCloud;
 use super::Color;
+use cloud::GasCloud;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Nebula {
@@ -30,17 +30,18 @@ impl Nebula {
             GasCloud::new(Color::new(0.2, 1.0, 1.0, 0.8), rng.gen()),
         ];
 
-        background.into_par_iter()
+        background
+            .into_par_iter()
             .enumerate()
-            .map(|(i, bg_color)| {
+            .flat_map(|(i, bg_color)| {
                 let (x, y) = self.get_xy(i);
-                // print!("\n{x},{y}: ");
-                clouds.iter()
+
+                clouds
+                    .iter()
                     .map(|gas| gas.pixel(x, y))
                     .fold(*bg_color, |bg, fg| bg.blend(fg))
                     .to_array()
             })
-            .flatten()
             .collect()
     }
 

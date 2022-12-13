@@ -1,4 +1,3 @@
-
 fn main() {
     let img = sky::generate(0xCAFEBABE);
 

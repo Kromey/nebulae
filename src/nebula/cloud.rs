@@ -1,5 +1,5 @@
-use bracket_noise::prelude::*;
 use super::Color;
+use bracket_noise::prelude::*;
 
 pub struct GasCloud {
     color: Color,

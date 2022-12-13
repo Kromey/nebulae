@@ -1,6 +1,6 @@
-use std::ops::Range;
-use rand::distributions::WeightedIndex;
 use crate::color::Color;
+use rand::distributions::WeightedIndex;
+use std::ops::Range;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SpectralType {
